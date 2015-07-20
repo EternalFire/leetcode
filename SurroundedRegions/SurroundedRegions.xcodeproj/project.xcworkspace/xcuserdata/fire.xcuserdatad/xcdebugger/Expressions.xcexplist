@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "Solution::solve(std::__1::vector&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;):main.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Solution::isValid(std::__1::vector&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt; &gt; &gt; const&amp;):main.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Solution::Element::operator==(Solution::Element const&amp;):main.cpp">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
