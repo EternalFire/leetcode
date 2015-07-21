@@ -11,5 +11,8 @@
       <ContextState
          contextName = "Solution::Element::operator==(Solution::Element const&amp;):main.cpp">
       </ContextState>
+      <ContextState
+         contextName = "Solution::check(std::__1::vector&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;, int, int):main.cpp">
+      </ContextState>
    </ContextStates>
 </VariablesViewState>

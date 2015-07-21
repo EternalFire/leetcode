@@ -61,6 +61,33 @@ namespace StringVectorUtil {
         return result;
     }
     
+    vector<vector<char>> VVString_VVChar(const vector<vector<string>>& array) {
+        vector<vector<char>> result;
+        
+        for (auto& vec_string : array) {
+            auto vec_char = VecString_VecChar(vec_string);
+            if (vec_char.size()) {
+                result.push_back(vec_char);
+            }
+        }
+        
+        return result;
+    }
+    
+    vector<vector<string>> VVChar_VVString(const vector<vector<char>>& board) {
+        vector<vector<string>> result;
+        
+        for (auto& vec_char : board) {
+            auto vec_string = VecChar_VecString(vec_char);
+            if (vec_string.size()) {
+                result.push_back(vec_string);
+            }
+        }
+        
+        return result;
+    }
+
+    
     // string => array; inField: 一行中的数据间隔符(",", "|"等), outField: 每行的间隔符("\n")
     vector<vector<string>> String_TwoDimensionalArray(const string& str, const char* inField, const char* outField) {
         
