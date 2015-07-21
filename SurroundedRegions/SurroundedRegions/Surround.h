@@ -61,6 +61,7 @@ protected:
     //    vector<vector<char>> _array; // 原始数据
     vector<Element> _connected; // 连通的O元素
     vector<Element> _alone; // 不连通的O元素
+    vector<Element> _delVec;
     
 public:
     Solution():_lenX(0), _lenY(0), _O('O'), _X('X'){}
@@ -83,6 +84,8 @@ public:
         cout << "===== check finish =====\n";
         
         checkSurround(board);
+        
+        surround(board);
     }
 
 protected:
@@ -226,9 +229,7 @@ protected:
     // 检测包围情况
     void checkSurround(vector<vector<char>>& board) {
         
-        // 1.判断连通的元素是否被包围
-        bool isCheckConnected = true;
-        
+        // 判断连通的元素是否被包围
         for (auto& e : _connected) {
             for (int i = 0; i < sizeof(e._connected) / sizeof(char); i++) {
                 // 判断不连通的一侧
@@ -236,27 +237,60 @@ protected:
                     auto nextElement = getElementByDirection(board, e, (Direction)i);
                     
                     if (nextElement == Element_None || isX(nextElement) == false) {
-                        isCheckConnected = false;
+                        
+                        if (nextElement == Element_None) {
+                            delConnected(board, e);
+                        }
+                        
                         break;
                     }
                 }
             }// end for
         }
         
-        if (isCheckConnected) {
-            for (auto& e : _connected) {
-                surround(board, e._x, e._y);
-            }
+        for (auto delE : _delVec) {
+            _connected.erase(find(_connected.begin(), _connected.end(), delE));
         }
         
-        // 2.孤立的元素
-        for (auto& e : _alone) {
-            surround(board, e._x, e._y);
+        _delVec.clear();
+    }
+    
+    void delConnected(vector<vector<char>>& board, Element& e) {
+        
+        if (find(_delVec.begin(), _delVec.end(), e) == _delVec.end()) {
+            _delVec.push_back(e);
+        }
+        
+        for (int i = 0; i < sizeof(e._connected) / sizeof(char); i++) {
+            
+            if (e._connected[i] == 1) {
+                auto nextElement = getElementByDirection(board, e, (Direction)i);
+                
+                for (auto ite = _connected.begin(); ite != _connected.end(); ite++) {
+                    if (nextElement._x == ite->_x && nextElement._y == ite->_y) {
+                        nextElement = *ite;
+                    }
+                }
+                
+                if (find(_delVec.begin(), _delVec.end(), nextElement) == _delVec.end()) {
+                    _delVec.push_back(nextElement);
+                    delConnected(board, nextElement);
+                }
+                else {
+                    break;
+                }
+            }
         }
     }
     
-    void surround(vector<vector<char>>& board, int x, int y) {
-        board[y][x] = _X;
+    void surround(vector<vector<char>>& board) {
+        for (auto& e : _connected) {
+            board[e._y][e._x] = _X;
+        }
+        
+        for (auto& e : _alone) {
+            board[e._y][e._x] = _X;
+        }
     }
     
 };

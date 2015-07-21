@@ -35,7 +35,6 @@
  };
  
  */
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -46,16 +45,19 @@
 using namespace std;
 using namespace StringVectorUtil;
 
-
 int main(int argc, const char * argv[]) {
     
     string str =
 "\
-X X X X\n\
-X O O X\n\
-X X O X\n\
-X O X X\n\
+X X X X O X X\n\
+X O O X X O X\n\
+X X O X O X O\n\
+X O X X X X X\n\
+X O X X O O X\n\
+X O O X O X X\n\
+X X X O X X O\n\
 ";
+    
 //"\
 //a b c d\n\
 //X O O X\n\
