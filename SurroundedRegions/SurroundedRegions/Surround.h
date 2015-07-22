@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -19,6 +20,7 @@ class Solution {
 protected:
     char _O;
     char _X;
+    char _P;
     int _lenX; // 二维数组x轴大小
     int _lenY; // 二维数组y轴大小
     
@@ -62,12 +64,19 @@ protected:
     vector<Element> _connected; // 连通的O元素
     vector<Element> _alone; // 不连通的O元素
     vector<Element> _delVec;
+    queue<Element> _queCheck;
     
 public:
-    Solution():_lenX(0), _lenY(0), _O('O'), _X('X'){}
+    Solution():_lenX(0), _lenY(0), _O('O'), _X('X'), _P('P'){}
     
     void solve(vector<vector<char>>& board) {
         
+//        solveWithCheckInside(board);
+        solveWithCheckBorder(board);
+    }
+
+protected:
+    void solveWithCheckInside(vector<vector<char>>& board) {
         if (isValid(board) == false) {
             return;
         }
@@ -87,31 +96,66 @@ public:
         
         surround(board);
     }
-
-protected:
-    // 二维数组大小在 x, y 方向 都大于等于3时, 才能实现包围
-    bool isValid(const vector<vector<char>>& board) {
-        int valid_len = 3;
+    
+    void solveWithCheckBorder(vector<vector<char>>& board) {
+        if (isValid(board) == false) {
+            return;
+        }
         
-        if (board.size() >= valid_len) {
-            
-            for (auto dataRow : board) {
-                
-                if (dataRow.size() < valid_len) {
-                    return false;
+        // 判断边界的O元素, 和 O元素连通的O元素
+        for (int y = 0; y < _lenY; y++) {
+            checkFromBorder(board, 0, y);
+            checkFromBorder(board, _lenX - 1, y);
+        }
+        
+        for (int x = 1; x < _lenX - 1; x++) {
+            checkFromBorder(board, x, 0);
+            checkFromBorder(board, x, _lenY - 1);
+        }
+        
+        while (!_queCheck.empty()) {
+            Element e = _queCheck.front();
+            _queCheck.pop();
+            checkNearFromBorder(board, e, Direction::kUp);
+            checkNearFromBorder(board, e, Direction::kDown);
+            checkNearFromBorder(board, e, Direction::kLeft);
+            checkNearFromBorder(board, e, Direction::kRight);
+        }
+
+//        for (int y = 1; y < _lenY - 1; y++) {
+//            for (int x = 1; x < _lenX - 1; x++) {
+        for (int y = 0; y < _lenY; y++) {
+            for (int x = 0; x < _lenX; x++) {
+                if (board[y][x] == _O) {
+                    board[y][x] = _X;
+                }
+                else if (board[y][x] == _P) { /// 处理标记
+                    board[y][x] = _O;
                 }
             }
-            
-            init(board);
-            
-            return true;
         }
-        else {
-            return false;
+        
+        return; /// 只处理标记, 不处理_connected
+        
+        for (auto ite = _connected.begin(); ite != _connected.end(); ite++) {
+            board[ite->_y][ite->_x] = _O;
         }
     }
     
-    void init(const vector<vector<char>>& board) {
+    // 二维数组大小在 x, y 方向 都大于等于3时, 才能实现包围
+    inline bool isValid(const vector<vector<char>>& board) {
+        int valid_len = 3;
+        
+        if (board.size() < valid_len || board[0].size() < valid_len) {
+            return false;
+        }
+        else {
+            init(board);
+            return true;
+        }
+    }
+    
+    inline void init(const vector<vector<char>>& board) {
         _lenX = (int)board.begin()->size();
         _lenY = (int)board.size();
     }
@@ -121,64 +165,173 @@ protected:
         
         Element result;
         
-        switch (d) {
-            case Direction::kUp :
-            {
-                if (e._y <= 0) {
-                    break;
-                }
-                result._x = e._x;
-                result._y = e._y - 1;
-                result._value = board[result._y][result._x];
-                //                cout << "checking up--------" << endl;
-                break;
-            }
-            case Direction::kDown :
-            {
-                if (e._y >= _lenY - 1) {
-                    break;
-                }
-                result._x = e._x;
-                result._y = e._y + 1;
-                result._value = board[result._y][result._x];
-                //                cout << "checking down--------" << endl;
-                break;
-            }
-            case Direction::kLeft :
-            {
-                if (e._x <= 0) {
-                    break;
-                }
-                result._x = e._x - 1;
-                result._y = e._y;
-                result._value = board[result._y][result._x];
-                //                cout << "checking left--------" << endl;
-                break;
-            }
-            case Direction::kRight :
-            {
-                if (e._x >= _lenX - 1) {
-                    break;
-                }
-                result._x = e._x + 1;
-                result._y = e._y;
-                result._value = board[result._y][result._x];
-                //                cout << "checking right--------" << endl;
-                break;
-            }
-            default:
-                break;
+//        if (e._y <= 0 || e._y >= _lenY - 1 || e._x <= 0 || e._x >= _lenX - 1) {
+        if (e._y < 0 || e._y > _lenY - 1 || e._x < 0 || e._x > _lenX - 1) {
+            return result;
         }
+        
+        pair<int, int> coord[4] = {
+            {e._x, e._y - 1},
+            {e._x, e._y + 1},
+            {e._x - 1, e._y},
+            {e._x + 1, e._y},
+        };
+        
+        if (!(coord[d].first >=0 && coord[d].first < _lenX &&
+            coord[d].second >= 0 && coord[d].second < _lenY)) {
+            return result;
+        }
+        
+        result._x = coord[d].first;
+        result._y = coord[d].second;
+        result._value = board[result._y][result._x];
+    
+//        switch (d) {
+//            case Direction::kUp :
+//            {
+//                if (e._y <= 0) {
+//                    break;
+//                }
+//                result._x = e._x;
+//                result._y = e._y - 1;
+//                result._value = board[result._y][result._x];
+//                break;
+//            }
+//            case Direction::kDown :
+//            {
+//                if (e._y >= _lenY - 1) {
+//                    break;
+//                }
+//                result._x = e._x;
+//                result._y = e._y + 1;
+//                result._value = board[result._y][result._x];
+//                break;
+//            }
+//            case Direction::kLeft :
+//            {
+//                if (e._x <= 0) {
+//                    break;
+//                }
+//                result._x = e._x - 1;
+//                result._y = e._y;
+//                result._value = board[result._y][result._x];
+//                break;
+//            }
+//            case Direction::kRight :
+//            {
+//                if (e._x >= _lenX - 1) {
+//                    break;
+//                }
+//                result._x = e._x + 1;
+//                result._y = e._y;
+//                result._value = board[result._y][result._x];
+//                break;
+//            }
+//            default:
+//                break;
+//        }
         
         return result;
     }
     
-    bool isO(const Element& e) {
+    inline bool isO(const Element& e) {
         return e._value == _O;
     }
     
-    bool isX(const Element& e) {
+    inline bool isX(const Element& e) {
         return e._value == _X;
+    }
+    
+    void checkFromBorder(vector<vector<char>>& board, int x, int y) {
+        if (board[y][x] == _X) {
+            return;
+        }
+        
+        Element e;
+        e._x = x;
+        e._y = y;
+        e._value = board[y][x];
+        
+//        checkNearFromBorder(board, e, Direction::kUp);
+//        checkNearFromBorder(board, e, Direction::kDown);
+//        checkNearFromBorder(board, e, Direction::kLeft);
+//        checkNearFromBorder(board, e, Direction::kRight);
+        _queCheck.push(e);
+    }
+    
+    Element checkNearFromBorder(vector<vector<char>>& board, Element& e, Direction d) {
+        Element nearE;
+        
+//        if (isX(e)) {
+//            return nearE;
+//        }
+        if (isO(e)) {
+            board[e._y][e._x] = _P;
+        }
+        
+        nearE = getElementByDirection(board, e, d);
+        // 连通的元素
+        if (nearE != Element_None && isO(nearE) && isO(e)) {
+            
+            /// 只标记, 不保存, begin
+//            board[e._y][e._x] = _P;
+            board[nearE._y][nearE._x] = _P;
+            _queCheck.push(nearE);
+            return nearE;
+            /// end
+            
+            bool findIt = getConnectedElement(e);
+            if (e._connected[d] == 1) {
+                return nearE;
+            }
+            
+            bool findIt_1 = getConnectedElement(nearE);
+            
+            if (findIt && findIt_1) {
+                return nearE;
+            }
+            
+            if (findIt)
+                _connected.erase(find(_connected.begin(), _connected.end(), e));
+            
+            if (findIt_1)
+                _connected.erase(find(_connected.begin(), _connected.end(), nearE));
+            
+            int nearDirection = 0;
+            if (d == Direction::kUp) {
+                nearDirection = Direction::kDown;
+            }
+            else if (d == Direction::kDown){
+                nearDirection = Direction::kUp;
+            }
+            else if (d == Direction::kLeft) {
+                nearDirection = Direction::kRight;
+            }
+            else if (d == Direction::kRight) {
+                nearDirection = Direction::kLeft;
+            }
+            
+            e._connected[d] = 1;
+            nearE._connected[nearDirection] = 1;
+            _connected.push_back(nearE);
+            _connected.push_back(e);
+//            checkFromBorder(board, nearE._x, nearE._y);
+            _queCheck.push(nearE);
+        }
+        return nearE;
+    }
+    
+    bool getConnectedElement(Element& e) {
+        bool findIt = false;
+        
+        for (auto ite = _connected.begin(); ite != _connected.end(); ite++) {
+            if (e._x == ite->_x && e._y == ite->_y) {
+                e = *ite;
+                findIt = true;
+                break;
+            }
+        }
+        return findIt;
     }
     
     void check(vector<vector<char>>& board, int x, int y) {
@@ -218,6 +371,7 @@ protected:
             if ( ite == _connected.end()) {
                 e._connected[d] = 1;
                 _connected.push_back(e);
+                check(board, nearE._x, nearE._y);
             }
             else {
                 ite->_connected[d] = 1;

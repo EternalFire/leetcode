@@ -35,15 +35,36 @@
  };
  
  */
+
+// 可以只判断边界连通的O元素, 而不管边界内的O元素
+
 #include <iostream>
 #include <string>
 #include <vector>
+#include <time.h>
 
 #include "StringVectorUtil.h"
 #include "Surround.h"
+#include "Header.h"
 
 using namespace std;
 using namespace StringVectorUtil;
+
+double Start() {
+    time_t timep;
+//    tm *p;
+    time(&timep);
+////    p = localtime(&timep);
+    cout << ctime(&timep) << endl;
+    return (double)clock() / CLOCKS_PER_SEC * 1000;
+}
+
+double End() {
+    time_t timep;
+    time(&timep);
+    cout << ctime(&timep) << endl;
+    return (double)clock() / CLOCKS_PER_SEC * 1000;
+}
 
 int main(int argc, const char * argv[]) {
     
@@ -55,27 +76,57 @@ X X O X O X O\n\
 X O X X X X X\n\
 X O X X O O X\n\
 X O O X O X X\n\
-X X X O X X O\n\
+X X X O O X O\n\
 ";
+//    auto array = String_TwoDimensionalArray(str, " ", "\n");
+//    cout << TwoDimensionalArray_String(array, " ", "\n");
+//    
+//    vector<vector<char>> board;
+//    board = VVString_VVChar(array);
     
-//"\
-//a b c d\n\
-//X O O X\n\
-//X X O X\n\
-//X O X X\n\
-//";
-    auto array = String_TwoDimensionalArray(str, " ", "\n");
-    cout << TwoDimensionalArray_String(array, " ", "\n");
-    
+    //begin
     vector<vector<char>> board;
-    board = VVString_VVChar(array);
-
+    int rowNum = sizeof(InputData) / sizeof(InputData[0]);
+    int colNum = 0;
+    
+    for (int i = 0; i < sizeof(InputData[0]) / sizeof(char); i++ )
+    {
+        if (InputData[0][i]) {
+            colNum++;
+        }
+        else {
+            break;
+        }
+    }
+    str = "";
+    for (int i = 0; i < rowNum; i++) {
+        vector<char> rowData;
+        
+        for (int j = 0; j < colNum; j++) {
+            rowData.push_back(InputData[i][j]);
+            cout << InputData[i][j] << " ";
+        }
+        
+        board.push_back(rowData);
+        cout << "\n";
+    }
+    //end
+    
+    auto t1 = Start();
     Solution s;
     s.solve(board);
+    
+//    for (int i = 0; i < 10000* 10000; i++) {
+//        i;
+//    }
+    auto t2 = End();
+    cout << "delta : " << t2 - t1 << "ms"<< endl;
     
     vector<vector<string>> newArray;
     newArray = VVChar_VVString(board);
     cout << TwoDimensionalArray_String(newArray, " ", "\n");
+    cout << "Finish main().........." << endl;
+    cout << "delta : " << t2 - t1 << "ms"<< endl;
     
     return 0;
 }

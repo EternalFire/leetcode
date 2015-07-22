@@ -3,6 +3,20 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "Solution::solveWithCheckBorder(std::__1::vector&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;):Surround.h">
+      </ContextState>
+      <ContextState
+         contextName = "Solution::getElementByDirection(std::__1::vector&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;, Solution::Element const&amp;, Solution::Direction):Surround.h">
+         <PersistentStrings>
+            <PersistentString
+               value = "coord[d].first &gt;=0 &amp;&amp; coord[d].first &lt; _lenX &amp;&amp;&#10;            coord[d].second &gt;= 0 &amp;&amp; coord[d].second &lt; _lenY">
+            </PersistentString>
+            <PersistentString
+               value = "coord[d]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Solution::solve(std::__1::vector&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;char, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;):main.cpp">
       </ContextState>
       <ContextState

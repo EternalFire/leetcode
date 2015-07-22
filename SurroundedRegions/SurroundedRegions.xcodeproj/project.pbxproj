@@ -27,6 +27,7 @@
 		42B5A3D11B5C0B8400BC7D63 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		42B5A3D81B5C122C00BC7D63 /* StringVectorUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringVectorUtil.h; sourceTree = "<group>"; };
 		42BC43D11B5E3BF000F0B0A7 /* Surround.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Surround.h; sourceTree = "<group>"; };
+		42BC43D21B5E907700F0B0A7 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +63,7 @@
 				42B5A3D11B5C0B8400BC7D63 /* main.cpp */,
 				42B5A3D81B5C122C00BC7D63 /* StringVectorUtil.h */,
 				42BC43D11B5E3BF000F0B0A7 /* Surround.h */,
+				42BC43D21B5E907700F0B0A7 /* Header.h */,
 			);
 			path = SurroundedRegions;
 			sourceTree = "<group>";
