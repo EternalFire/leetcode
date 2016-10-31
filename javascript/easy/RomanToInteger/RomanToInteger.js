@@ -31,28 +31,11 @@ var romanToInt = function(s) {
 	});
 
 	if (check) {		
-		// return Array.from(s).reverse().reduce(function(a, b, index, array) {
-		// 	console.log(a,b,index);
-		// 	var lastValue = getRomanValue(array[index - 1]);
-		// 	var curValue = getRomanValue(array[index]);
-		// 	var sum = typeof a == "string" ? lastValue : a;
-			
-		// 	if (lastValue <= curValue) {
-		// 		sum += curValue;
-		// 	} 
-		// 	else if (isIXC(array[index])) {
-		// 		sum -= curValue;				
-		// 	}
-		// 	console.log(lastValue, index, array[index], curValue, sum);
-		// 	return sum;
-		// }, );
-
 		var sum = 0;
-		// var array = Array.from(s).reverse();
 
-		Array.from(s).reverse().map(function(e, index, array) {
-			var lastValue = getRomanValue(array[index - 1]);
+		Array.from(s).reverse().forEach(function(e, index, array) {
 			var curValue = getRomanValue(array[index]);
+			var lastValue = index > 0 ? getRomanValue(array[index - 1]) : 0;
 
 			if (lastValue <= curValue) {
 				sum += curValue;
@@ -61,7 +44,8 @@ var romanToInt = function(s) {
 				sum -= curValue;
 			}
 		})
+		return sum;
 	}
 	return 0;
 };
-console.log(romanToInt('i'));
+
