@@ -33,19 +33,41 @@ var romanToInt = function(s) {
 	if (check) {		
 		var sum = 0;
 
-		Array.from(s).reverse().forEach(function(e, index, array) {
-			var curValue = getRomanValue(array[index]);
-			var lastValue = index > 0 ? getRomanValue(array[index - 1]) : 0;
+		// Array.from(s).reverse().forEach(function(e, index, array) {
+		// 	var curValue = getRomanValue(array[index]);
+		// 	var lastValue = index > 0 ? getRomanValue(array[index - 1]) : 0;
+
+		// 	if (lastValue <= curValue) {
+		// 		sum += curValue;
+		// 	}
+		// 	else if (isIXC(array[index])) {
+		// 		sum -= curValue;
+		// 	}
+		// })
+		// return sum;
+
+		if (s.length == 1) { return getRomanValue(s); }
+		
+		var lastValue = getRomanValue(s[s.length - 1]); // last calculated
+		sum = lastValue;
+
+		for (var i = s.length - 2; i >= 0; i--) {		
+			
+			var curValue = getRomanValue(s[i]);
 
 			if (lastValue <= curValue) {
 				sum += curValue;
 			}
-			else if (isIXC(array[index])) {
+			else if (isIXC(s[i])) {
 				sum -= curValue;
 			}
-		})
+
+			lastValue = curValue;
+		}
+
 		return sum;
 	}
 	return 0;
 };
 
+console.log(romanToInt('DCXXI'));
